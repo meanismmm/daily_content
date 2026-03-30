@@ -329,7 +329,8 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 let apiKey = '';
 let selectedTopic = '';
 
-(function init() {
+// ── INIT — runs after all functions defined ────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
   const d = new Date();
   const days = ['일','월','화','수','목','금','토'];
   document.getElementById('today-date').textContent =
@@ -337,7 +338,7 @@ let selectedTopic = '';
   apiKey = localStorage.getItem('ck_api') || '';
   if (!apiKey) document.getElementById('no-key-notice').style.display = 'block';
   fetchTopics();
-})();
+});
 
 function openSettings() {
   document.getElementById('inp-api-key').value = apiKey;
@@ -370,24 +371,28 @@ async function fetchTopics() {
   const today = new Date().toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'long'});
   try {
     const res = await callClaude(`오늘(${today}) 블로그 & 숏폼 주제 6개를 추천해줘. 조건: 경제/사회/역사/심리/문화 중 하나, 지금 한국에서 관심 높은 것, 논쟁 또는 고찰 거리 있는 것, 10~40대 공감 가능. JSON 배열만 응답. ["주제1","주제2","주제3","주제4","주제5","주제6"]`, 400);
-    const clean = res.replace(/\`\`\`json|\`\`\`/g,'').trim();
+    const clean = res.replace(/```json|```/g,'').trim();
     renderTopics(JSON.parse(clean));
-  } catch(e) { renderTopics(fallback); }
+  } catch(e) {
+    renderTopics(fallback);
+    console.warn('주제 추천 오류 (fallback 사용):', e.message);
+  }
 
   btn.disabled = false;
   icon.textContent = '↺';
 }
 
 function renderTopics(arr) {
-  document.getElementById('topic-pills').innerHTML = arr.map(t =>
-    `<div class="topic-pill" onclick="pickTopic(this,'${t.replace(/'/g,"&#39;")}')">${t}</div>`
+  document.getElementById('topic-pills').innerHTML = arr.map((t, i) =>
+    `<div class="topic-pill" onclick="pickTopic(this,${i})">${t}</div>`
   ).join('');
+  window._topics = arr;
 }
 
-function pickTopic(el, t) {
+function pickTopic(el, idx) {
   document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('selected'));
   el.classList.add('selected');
-  selectedTopic = t;
+  selectedTopic = window._topics[idx];
   document.getElementById('inp-custom-topic').value = '';
 }
 
