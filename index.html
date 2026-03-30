@@ -416,39 +416,85 @@ async function generateAll() {
 
 async function genKR(url, pLink, memo) {
   const el = document.getElementById('out-coup-kr');
-  const link = pLink ? `\n\n─────────────\n구매 링크 👉 ${pLink}` : '\n\n─────────────\n[쿠팡파트너스 링크 삽입]';
+  const link = pLink ? `구매 링크 👉 ${pLink}` : '[쿠팡파트너스 링크 삽입]';
   try {
-    const r = await callClaude(`다음 쿠팡 상품 링크의 상품을 파악하고 그 상품에 꼭 맞는 유튜브 숏폼 스크립트를 한국어로 써줘.
+    const r = await callClaude(`다음 쿠팡 상품 링크의 상품을 분석하고, CapCut AI 영상 제작용 장면 단위 숏폼 스크립트를 한국어로 써줘.
 
 상품 링크: ${url}${memo ? '\n추가 메모: '+memo : ''}
 
-조건:
-- 이 상품의 실제 특징·장점을 구체적으로 언급 (막연한 "좋아요" 금지)
-- 구어체, 친근하고 에너지 있는 말투
-- 구조: 후킹(3초) → 공감/문제(10초) → 상품 소개·장점 2~3가지(20초) → CTA(5초)
-- 총 60초 이내, 약 200자
-- 자막용으로 짧고 끊어치게
-- 스크립트만. 제목·설명 없이.`);
-    el.className = 'out-body'; el.textContent = r + link;
+[출력 형식 — 반드시 이 형식 그대로]
+총 7~9개 장면. 각 장면은 아래 구조로:
+
+━━━━━━━━━━━━━━━━━━━━
+[장면 N] 0~Xs | 역할: (후킹/문제/소개/장점/CTA 중 하나)
+나레이션: "실제 말할 대사. 구어체. 짧고 강하게."
+화면: (CapCut AI 영상 검색어 또는 Pexels 검색어. 영어로. 구체적 상황 묘사. 예: "frustrated person looking at messy desk close-up")
+자막: "화면에 표시될 핵심 텍스트. 2~5단어."
+효과: (줌인/줌아웃/컷/슬로우모션/텍스트팝업 중 하나)
+━━━━━━━━━━━━━━━━━━━━
+
+[장면 구성]
+- 장면 1 (0~3초): 후킹 — 시청자가 스크롤 멈출 반전 질문이나 충격 사실. 나레이션 없이 자막+화면만도 가능.
+- 장면 2~3 (3~15초): 공감/문제 — 이 상품이 필요한 상황. 시청자가 "맞아 나도 그래" 느끼게.
+- 장면 4~6 (15~40초): 상품 소개+장점 — 이 상품의 실제 특징 2~3가지. 구체적 수치나 상황 포함.
+- 장면 7~8 (40~55초): 결과/변화 — 상품 사용 후 달라진 상황. 감정적 만족감.
+- 장면 9 (55~60초): CTA — 링크 클릭 유도. 짧고 직접적.
+
+[규칙]
+- 나레이션은 구어체. "이거 진짜예요?", "솔직히 말하면" 같은 자연스러운 말투.
+- 화면 설명은 CapCut/Pexels에서 바로 검색 가능한 영어 키워드로.
+- 각 장면 나레이션은 1~2문장 이내.
+- 이 상품의 실제 특징을 반영. 추상적 묘사 금지.
+
+[마지막에 추가]
+─────────────────────
+📌 설명란 문구 (복붙용):
+[상품명 + 한줄 소개]
+${link}
+#쿠팡파트너스 #추천템 #[상품카테고리]`, 2000);
+    el.className = 'out-body'; el.textContent = r;
   } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
 
 async function genEN(url, pLink, memo) {
   const el = document.getElementById('out-coup-en');
-  const link = pLink ? `\n\n─────────────\nShop here 👉 ${pLink}` : '\n\n─────────────\n[Coupang link here]';
+  const link = pLink ? `Shop here 👉 ${pLink}` : '[Coupang affiliate link here]';
   try {
-    const r = await callClaude(`Look at this Coupang product URL and write an English YouTube Shorts script tailored to the actual product.
+    const r = await callClaude(`Analyze this Coupang product URL and write a scene-by-scene YouTube Shorts production script in English for CapCut AI video creation.
 
 Product URL: ${url}${memo ? '\nNotes: '+memo : ''}
 
-Requirements:
-- Mention specific real features/benefits of THIS product (no generic "great product")
-- Conversational, upbeat, energetic tone
-- Structure: Hook(3s) → Relatable problem(10s) → Product + 2-3 benefits(20s) → CTA(5s)
-- Under 60 seconds (~180 words)
-- Short punchy sentences for subtitles
-- Script only. No title or explanation.`);
-    el.className = 'out-body'; el.textContent = r + link;
+[OUTPUT FORMAT — follow exactly]
+7~9 scenes total. Each scene:
+
+━━━━━━━━━━━━━━━━━━━━
+[Scene N] 0~Xs | Role: (hook/problem/intro/benefit/CTA)
+Narration: "Actual spoken line. Conversational. Short and punchy."
+Visual: (CapCut AI / Pexels search query. Specific situation. e.g. "frustrated person looking at messy desk close-up")
+Caption: "On-screen text. 2~5 words."
+Effect: (zoom-in / zoom-out / cut / slow-motion / text-pop)
+━━━━━━━━━━━━━━━━━━━━
+
+[Scene structure]
+- Scene 1 (0~3s): HOOK — Scroll-stopping fact, question, or contradiction. Can be caption-only.
+- Scene 2~3 (3~15s): PROBLEM — Relatable situation where this product is needed.
+- Scene 4~6 (15~40s): PRODUCT — Real specific features/benefits. Use actual numbers or situations.
+- Scene 7~8 (40~55s): RESULT — After using the product. Emotional payoff.
+- Scene 9 (55~60s): CTA — Direct click prompt.
+
+[Rules]
+- Narration: natural spoken English. "Wait, is this real?", "Okay hear me out" style.
+- Visual: CapCut/Pexels-ready English search keywords. Specific and visual.
+- Each narration: 1~2 sentences max.
+- Reflect actual product features. No vague descriptions.
+
+[Add at the end]
+─────────────────────
+📌 Description copy:
+[Product name + one-line pitch]
+${link}
+#coupang #productreview #[category]`, 2000);
+    el.className = 'out-body'; el.textContent = r;
   } catch(e) { el.className = 'out-body'; el.textContent = '❌ Failed: '+e.message; }
 }
 
@@ -492,17 +538,33 @@ async function genTistory(topic) {
 async function genShortB(topic) {
   const el = document.getElementById('out-topic-short');
   try {
-    const r = await callClaude(`아래 주제로 시사/에세이 채널 스타일의 유튜브 숏폼 스크립트를 써줘.
+    const r = await callClaude(`아래 주제로 시사/에세이 채널 스타일의 CapCut AI 영상 제작용 장면 단위 숏폼 스크립트를 써줘.
 
 주제: ${topic}
 
-조건:
-- 후킹: 반박하기 어려운 질문이나 반전 사실로 시작
-- 구조: 후킹(5초) → 현상/문제 제시(15초) → 나의 시각·분석(25초) → 한 줄 결론(5초)
-- 말투: 직설적이고 에너지 있게. 설교 금지.
-- 60초 이내, 약 200자
-- 짧고 끊어치는 자막용 문장
-- 스크립트만. 제목·설명 없이.`);
+[출력 형식 — 반드시 이 형식 그대로]
+총 7~8개 장면. 각 장면:
+
+━━━━━━━━━━━━━━━━━━━━
+[장면 N] 0~Xs | 역할: (후킹/현상/분석/반전/결론 중 하나)
+나레이션: "실제 말할 대사. 직설적. 짧고 강하게."
+화면: (CapCut AI 영상 또는 Pexels 검색어. 영어로. 구체적 상황. 예: "young people staring at phones in silence, dark lighting")
+자막: "화면에 표시될 핵심 텍스트. 2~6단어. 임팩트 있게."
+효과: (줌인/줌아웃/컷/슬로우모션/텍스트팝업 중 하나)
+━━━━━━━━━━━━━━━━━━━━
+
+[장면 구성]
+- 장면 1 (0~4초): 후킹 — 반박 어려운 질문 or 충격 통계 or 반전 사실. 시청자가 "어?" 하고 멈추게.
+- 장면 2~3 (4~18초): 현상 제시 — 지금 실제로 벌어지고 있는 일. 구체적 숫자나 상황.
+- 장면 4~5 (18~38초): 분석/내 시각 — 왜 이런지 내 관점으로 직설적으로. 비유 적극 활용.
+- 장면 6~7 (38~55초): 반전 or 핵심 메시지 — 사람들이 놓치고 있는 것.
+- 장면 8 (55~60초): 결론 — 한 줄로 끝내기. 여운 남기게.
+
+[규칙]
+- 나레이션은 구어체. 설교 금지. "그러니까 결국은", "이거 진짜 웃긴 게" 같은 말투.
+- 화면 설명은 CapCut/Pexels 바로 검색 가능한 영어 키워드.
+- 각 나레이션 1~2문장 이내.
+- 통계나 수치가 있으면 자막에 크게 표시.`, 2000);
     el.className = 'out-body'; el.textContent = r;
   } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
