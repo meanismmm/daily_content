@@ -4,673 +4,355 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>오늘의 콘텐츠</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e10;
-    --surface: #18181c;
-    --surface2: #212126;
-    --border: #2e2e35;
-    --border2: #3d3d47;
-    --text: #f0f0f2;
-    --text2: #9090a0;
-    --text3: #5a5a6a;
-    --accent: #7c6aff;
-    --accent2: #5046cc;
-    --green: #2ecc88;
-    --orange: #ff8c42;
-    --red: #ff4f4f;
-    --yellow: #ffd166;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+:root {
+  --bg: #0e0e10;
+  --surface: #18181c;
+  --surface2: #212126;
+  --border: #2e2e35;
+  --border2: #3d3d47;
+  --text: #f0f0f2;
+  --text2: #9090a0;
+  --text3: #5a5a6a;
+  --accent: #7c6aff;
+  --accent2: #5046cc;
+  --green: #2ecc88;
+  --red: #ff4f4f;
+  --teal: #3ecfcf;
+  --r: 12px;
+  --rs: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; font-weight: 300; min-height: 100vh; line-height: 1.6; }
 
-  /* TOP BAR */
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 28px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 100;
-  }
-  .topbar-left { display: flex; align-items: center; gap: 12px; }
-  .logo {
-    width: 32px; height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700; color: #fff;
-    font-family: 'DM Mono', monospace;
-  }
-  .logo-text { font-size: 15px; font-weight: 500; letter-spacing: -0.3px; }
-  .logo-date { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
-  .topbar-right { display: flex; align-items: center; gap: 10px; }
-  .btn-settings {
-    background: none; border: 1px solid var(--border2); color: var(--text2);
-    padding: 7px 14px; border-radius: var(--radius-sm);
-    font-size: 13px; font-family: inherit; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-settings:hover { border-color: var(--accent); color: var(--accent); }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
+.logo-row { display: flex; align-items: center; gap: 10px; }
+.logo { width: 30px; height: 30px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-weight: 700; font-size: 14px; color: #fff; }
+.logo-name { font-size: 14px; font-weight: 500; }
+.logo-date { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.btn-sm { background: none; border: 1px solid var(--border2); color: var(--text2); padding: 6px 13px; border-radius: var(--rs); font-size: 12px; font-family: inherit; cursor: pointer; transition: all .15s; }
+.btn-sm:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* MAIN */
-  .main { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+.main { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
 
-  /* STEP INDICATOR */
-  .steps {
-    display: flex; align-items: center; gap: 0;
-    margin-bottom: 36px;
-  }
-  .step {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 12px; color: var(--text3);
-    font-family: 'DM Mono', monospace;
-  }
-  .step-num {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; transition: all 0.2s;
-  }
-  .step.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .step.done .step-num { background: var(--green); border-color: var(--green); color: #fff; }
-  .step.active { color: var(--text2); }
-  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 12px; min-width: 30px; }
+.notice { background: #1a1d2e; border: 1px solid #2a3060; border-radius: var(--rs); padding: 11px 14px; font-size: 13px; color: #8090cc; margin-bottom: 20px; display: none; }
 
-  /* SECTION HEADER */
-  .sec-header {
-    display: flex; align-items: baseline; gap: 12px;
-    margin-bottom: 20px;
-  }
-  .sec-title { font-size: 20px; font-weight: 500; letter-spacing: -0.5px; }
-  .sec-sub { font-size: 13px; color: var(--text3); }
+.input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+@media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
 
-  /* BIG ACTION BUTTON */
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius);
-    padding: 14px 28px; font-size: 15px; font-weight: 500;
-    font-family: inherit; cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: -0.2px;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-  .btn-secondary {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--surface2); color: var(--text2);
-    border: 1px solid var(--border2); border-radius: var(--radius-sm);
-    padding: 10px 18px; font-size: 13px; font-weight: 400;
-    font-family: inherit; cursor: pointer;
-    transition: all 0.15s;
-  }
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.track-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; }
+.track-label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.track-badge { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+.badge-a { background: #1e2030; color: var(--accent); border: 1px solid #2e3060; }
+.badge-b { background: #1a2e1e; color: var(--green); border: 1px solid #253525; }
+.track-title { font-size: 14px; font-weight: 500; }
+.track-desc { font-size: 12px; color: var(--text3); margin-bottom: 14px; line-height: 1.65; }
 
-  /* TOPIC CARDS */
-  .topic-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-  .topic-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; gap: 16px;
-  }
-  .topic-card:hover { border-color: var(--accent); background: var(--surface2); }
-  .topic-card.selected { border-color: var(--accent); background: #1a1830; }
-  .topic-num {
-    font-family: 'DM Mono', monospace; font-size: 11px;
-    color: var(--text3); min-width: 20px;
-  }
-  .topic-content { flex: 1; }
-  .topic-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; letter-spacing: -0.3px; }
-  .topic-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
-  .topic-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-  .tag {
-    font-size: 11px; padding: 3px 9px; border-radius: 20px;
-    font-family: 'DM Mono', monospace;
-  }
-  .tag-kr { background: #1e2a3a; color: #6ab0ff; border: 1px solid #2a3d55; }
-  .tag-en { background: #1e2e24; color: #5dd68a; border: 1px solid #2a4035; }
-  .tag-coup { background: #2e2216; color: #ff9f4a; border: 1px solid #3d2e1a; }
-  .topic-arrow { color: var(--text3); font-size: 18px; transition: 0.15s; }
-  .topic-card:hover .topic-arrow, .topic-card.selected .topic-arrow { color: var(--accent); }
+.field { margin-bottom: 11px; }
+.field label { display: block; font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-bottom: 5px; letter-spacing: .04em; }
+.field input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--rs); color: var(--text); font-size: 13px; font-family: 'Noto Sans KR', sans-serif; padding: 9px 12px; outline: none; transition: border-color .15s; }
+.field input:focus { border-color: var(--accent); }
+.field input::placeholder { color: var(--text3); }
 
-  /* OUTPUT PANEL */
-  .output-panel { margin-top: 32px; }
-  .output-tabs {
-    display: flex; gap: 4px; margin-bottom: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .tab-btn {
-    background: none; border: none; border-bottom: 2px solid transparent;
-    color: var(--text3); font-size: 13px; font-family: inherit;
-    padding: 10px 16px; cursor: pointer;
-    margin-bottom: -1px; transition: all 0.15s;
-  }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-btn:hover:not(.active) { color: var(--text2); }
-  .tab-content { display: none; padding-top: 20px; }
-  .tab-content.active { display: block; }
+.topic-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.topic-row-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: .04em; }
+.btn-refresh { background: none; border: 1px solid var(--border2); color: var(--text3); padding: 4px 10px; border-radius: var(--rs); font-size: 11px; font-family: 'DM Mono', monospace; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 5px; }
+.btn-refresh:hover { border-color: var(--teal); color: var(--teal); }
+.btn-refresh:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* OUTPUT BOX */
-  .output-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .output-box-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .output-box-label {
-    font-size: 12px; font-family: 'DM Mono', monospace;
-    color: var(--text3); letter-spacing: 0.05em;
-  }
-  .btn-copy {
-    background: none; border: 1px solid var(--border2); color: var(--text2);
-    font-size: 12px; font-family: 'DM Mono', monospace;
-    padding: 5px 12px; border-radius: 6px; cursor: pointer;
-    transition: all 0.15s; display: flex; align-items: center; gap: 6px;
-  }
-  .btn-copy:hover { border-color: var(--green); color: var(--green); }
-  .btn-copy.copied { border-color: var(--green); color: var(--green); }
-  .output-text {
-    padding: 20px;
-    font-size: 14px; line-height: 1.85;
-    color: var(--text2);
-    white-space: pre-wrap;
-    min-height: 200px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 300;
-  }
-  .output-text.loading {
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text3); font-family: 'DM Mono', monospace; font-size: 13px;
-    gap: 8px;
-  }
+.topic-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 11px; min-height: 38px; }
+.topic-pill { background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer; transition: all .15s; color: var(--text2); white-space: nowrap; }
+.topic-pill:hover { border-color: var(--green); color: var(--green); }
+.topic-pill.selected { background: #162614; border-color: var(--green); color: var(--green); }
+.pill-skeleton { height: 32px; border-radius: 20px; background: var(--surface2); animation: sh 1.2s ease-in-out infinite; }
+@keyframes sh { 0%,100%{opacity:.3} 50%{opacity:.7} }
 
-  /* LOADING SPINNER */
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid var(--border2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.generate-bar { display: flex; align-items: center; gap: 16px; padding: 20px 0 0; border-top: 1px solid var(--border); }
+.btn-primary { display: inline-flex; align-items: center; gap: 9px; background: var(--accent); color: #fff; border: none; border-radius: var(--r); padding: 13px 26px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all .15s; }
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.gen-hint { font-size: 12px; color: var(--text3); line-height: 1.75; }
 
-  /* LOADING DOTS */
-  .dots::after {
-    content: '';
-    animation: dots 1.2s steps(4, end) infinite;
-  }
-  @keyframes dots {
-    0%   { content: ''; }
-    25%  { content: '.'; }
-    50%  { content: '..'; }
-    75%  { content: '...'; }
-    100% { content: ''; }
-  }
+.output-section { margin-top: 36px; display: none; }
+.output-section.visible { display: block; }
+.out-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.out-title { font-size: 17px; font-weight: 500; }
+.btn-reset { background: none; border: 1px solid var(--border2); color: var(--text3); padding: 6px 13px; border-radius: var(--rs); font-size: 12px; font-family: inherit; cursor: pointer; transition: all .15s; }
+.btn-reset:hover { border-color: var(--red); color: var(--red); }
 
-  /* SETTINGS MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7); z-index: 200;
-    align-items: center; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 16px;
-    padding: 28px;
-    width: 480px; max-width: 90vw;
-  }
-  .modal-title { font-size: 17px; font-weight: 500; margin-bottom: 20px; }
-  .field { margin-bottom: 16px; }
-  .field label { display: block; font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; margin-bottom: 6px; letter-spacing: 0.04em; }
-  .field input, .field select {
-    width: 100%; background: var(--bg);
-    border: 1px solid var(--border2); border-radius: var(--radius-sm);
-    color: var(--text); font-size: 13px; font-family: 'DM Mono', monospace;
-    padding: 10px 14px; outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus, .field select:focus { border-color: var(--accent); }
-  .field-hint { font-size: 11px; color: var(--text3); margin-top: 5px; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+.status-row { display: none; align-items: center; gap: 9px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--rs); margin-bottom: 14px; font-size: 13px; color: var(--text2); }
+.status-row.on { display: flex; }
+.sdot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.dots::after { content: ''; animation: dd 1.2s steps(4,end) infinite; }
+@keyframes dd { 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} }
 
-  /* GENERATE ROW */
-  .generate-row {
-    display: flex; align-items: center; gap: 12px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-  }
+.output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 700px) { .output-grid { grid-template-columns: 1fr; } }
+.out-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.out-card.full { grid-column: 1 / -1; }
+.out-card-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+.out-card-meta { display: flex; align-items: center; gap: 7px; }
+.out-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text3); }
+.out-track { font-size: 10px; font-family: 'DM Mono', monospace; padding: 2px 8px; border-radius: 20px; }
+.tag-a { background: #1e2030; color: var(--accent); }
+.tag-b { background: #162614; color: var(--green); }
+.btn-copy { background: none; border: 1px solid var(--border2); color: var(--text3); font-size: 11px; font-family: 'DM Mono', monospace; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+.btn-copy:hover { border-color: var(--green); color: var(--green); }
+.btn-copy.ok { border-color: var(--green); color: var(--green); }
+.out-body { padding: 16px; font-size: 13px; line-height: 1.85; color: var(--text2); white-space: pre-wrap; min-height: 160px; font-family: 'Noto Sans KR', sans-serif; font-weight: 300; }
+.out-body.loading { display: flex; align-items: center; justify-content: center; color: var(--text3); font-family: 'DM Mono', monospace; font-size: 12px; gap: 8px; }
+.out-hint { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; padding: 0 16px 12px; }
 
-  /* NOTICE */
-  .notice {
-    background: #1a1d2e; border: 1px solid #2a3060;
-    border-radius: var(--radius-sm); padding: 12px 16px;
-    font-size: 13px; color: #8090cc;
-    margin-bottom: 24px;
-  }
-  .notice strong { color: #a0b0ee; }
+.spinner { width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* BADGE */
-  .badge {
-    display: inline-block; font-size: 10px; font-family: 'DM Mono', monospace;
-    padding: 2px 7px; border-radius: 20px;
-    vertical-align: middle; margin-left: 6px;
-  }
-  .badge-auto { background: #1e2e24; color: var(--green); border: 1px solid #2a4035; }
+hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 
-  /* SECTION DIVIDER */
-  .sec-divider { margin: 36px 0; border: none; border-top: 1px solid var(--border); }
-
-  /* STATUS BAR */
-  .status-bar {
-    display: none;
-    align-items: center; gap: 10px;
-    padding: 12px 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin-bottom: 20px;
-    font-size: 13px; color: var(--text2);
-  }
-  .status-bar.visible { display: flex; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-  /* SECTION WRAPPER FOR STEPS */
-  .section { display: none; }
-  .section.visible { display: block; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 26px; width: 440px; max-width: 92vw; }
+.modal-title { font-size: 16px; font-weight: 500; margin-bottom: 18px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+.field-hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.btn-sec { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); border-radius: var(--rs); padding: 9px 16px; font-size: 13px; font-family: inherit; cursor: pointer; transition: all .15s; }
+.btn-sec:hover { border-color: var(--accent); color: var(--accent); }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="topbar-left">
+  <div class="logo-row">
     <div class="logo">C</div>
     <div>
-      <div class="logo-text">오늘의 콘텐츠</div>
+      <div class="logo-name">오늘의 콘텐츠</div>
       <div class="logo-date" id="today-date"></div>
     </div>
   </div>
-  <div class="topbar-right">
-    <button class="btn-settings" onclick="openSettings()">⚙ 설정</button>
-  </div>
+  <button class="btn-sm" onclick="openSettings()">⚙ 설정</button>
 </div>
 
 <div class="main">
 
-  <!-- STEPS -->
-  <div class="steps">
-    <div class="step active" id="step1-indicator">
-      <div class="step-num">1</div>
-      <span>주제 추천</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step" id="step2-indicator">
-      <div class="step-num">2</div>
-      <span>주제 선택</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step" id="step3-indicator">
-      <div class="step-num">3</div>
-      <span>콘텐츠 생성</span>
-    </div>
+  <div class="notice" id="no-key-notice">
+    API 키 없음 — 우측 상단 <strong>설정</strong>에서 Claude API 키를 먼저 입력해 주세요.
   </div>
 
-  <!-- STEP 1: GET TOPICS -->
-  <div class="section visible" id="section-topics">
-    <div class="sec-header">
-      <div class="sec-title">오늘 뭘 만들까요?</div>
-      <div class="sec-sub">AI가 오늘의 주제를 추천해 드립니다</div>
+  <div class="input-grid">
+
+    <!-- TRACK A -->
+    <div class="track-card">
+      <div class="track-label">
+        <span class="track-badge badge-a">TRACK A</span>
+        <span class="track-title">쿠팡 상품 숏폼</span>
+      </div>
+      <div class="track-desc">상품 링크를 넣으면 해당 상품을 분석해서<br>KR + EN 숏폼 스크립트를 생성합니다.</div>
+      <div class="field">
+        <label>쿠팡 상품 링크</label>
+        <input type="text" id="inp-product-url" placeholder="https://www.coupang.com/vp/products/...">
+      </div>
+      <div class="field">
+        <label>쿠팡파트너스 링크 (선택 · 스크립트 하단 자동 삽입)</label>
+        <input type="text" id="inp-partners-link" placeholder="https://link.coupang.com/a/...">
+      </div>
+      <div class="field">
+        <label>추가 메모 (선택 · 타겟, 강조점 등)</label>
+        <input type="text" id="inp-product-memo" placeholder="예: 반려동물용, 50대 타겟, 가성비 강조">
+      </div>
     </div>
 
-    <div id="no-key-notice" class="notice" style="display:none">
-      <strong>API 키 없음</strong> — 우측 상단 설정에서 Claude API 키를 먼저 입력해 주세요.
+    <!-- TRACK B -->
+    <div class="track-card">
+      <div class="track-label">
+        <span class="track-badge badge-b">TRACK B</span>
+        <span class="track-title">시사/에세이 콘텐츠</span>
+      </div>
+      <div class="track-desc">경제·사회·역사·문화 주제로 이슥슥 톤 티스토리 글 +<br>같은 주제의 숏폼 스크립트를 동시 생성합니다.</div>
+      <div class="topic-row">
+        <span class="topic-row-label">오늘의 주제 추천</span>
+        <button class="btn-refresh" id="btn-refresh" onclick="fetchTopics()">
+          <span id="refresh-icon">↺</span> 새로 추천
+        </button>
+      </div>
+      <div class="topic-pills" id="topic-pills">
+        <div class="pill-skeleton" style="width:110px"></div>
+        <div class="pill-skeleton" style="width:85px"></div>
+        <div class="pill-skeleton" style="width:130px"></div>
+        <div class="pill-skeleton" style="width:95px"></div>
+      </div>
+      <div class="field">
+        <label>직접 입력 (주제 선택 대신)</label>
+        <input type="text" id="inp-custom-topic" placeholder="예: 요즘 청년들이 결혼을 기피하는 진짜 이유">
+      </div>
     </div>
 
-    <button class="btn-primary" id="btn-get-topics" onclick="getTopics()">
-      <span id="topic-btn-icon">✦</span>
-      <span id="topic-btn-text">오늘의 주제 추천받기</span>
+  </div>
+
+  <div class="generate-bar">
+    <button class="btn-primary" id="btn-generate" onclick="generateAll()">
+      <span>⚡</span>
+      <span id="gen-text">콘텐츠 생성</span>
     </button>
-
-    <div class="topic-grid" id="topic-list"></div>
-
-    <div class="generate-row" id="generate-row" style="display:none">
-      <button class="btn-primary" onclick="generateAll()">
-        <span>⚡</span>
-        <span>선택한 주제로 콘텐츠 생성</span>
-      </button>
-      <div style="font-size:13px; color:var(--text3)">쿠팡 스크립트 + EN 스크립트 + 티스토리 게시글</div>
+    <div class="gen-hint">
+      Track A → 쿠팡 숏폼 KR + 영문 숏폼 EN<br>
+      Track B → 티스토리 게시글 + 시사 숏폼 KR<br>
+      입력한 트랙만 생성 · 둘 다 입력하면 동시 생성
     </div>
   </div>
 
-  <!-- STEP 3: OUTPUT -->
-  <div class="section" id="section-output">
-    <hr class="sec-divider">
-
-    <div class="sec-header">
-      <div class="sec-title" id="output-topic-title">생성 결과</div>
-      <button class="btn-secondary" onclick="resetAll()">← 다시 선택</button>
+  <!-- OUTPUT -->
+  <div class="output-section" id="output-section">
+    <hr class="div">
+    <div class="out-header">
+      <div class="out-title">생성 결과</div>
+      <button class="btn-reset" onclick="resetOutput()">✕ 닫기</button>
     </div>
 
-    <div class="status-bar visible" id="status-bar">
-      <div class="status-dot"></div>
-      <span id="status-text">콘텐츠 생성 중<span class="dots"></span></span>
+    <div class="status-row" id="status-row">
+      <div class="sdot"></div>
+      <span>콘텐츠 생성 중<span class="dots"></span></span>
     </div>
 
-    <div class="output-tabs">
-      <button class="tab-btn active" onclick="switchTab('coupang')">쿠팡 숏폼 (KR)</button>
-      <button class="tab-btn" onclick="switchTab('english')">영문 숏폼 (EN)</button>
-      <button class="tab-btn" onclick="switchTab('tistory')">티스토리 게시글</button>
-    </div>
+    <div class="output-grid">
 
-    <!-- COUPANG TAB -->
-    <div class="tab-content active" id="tab-coupang">
-      <div class="output-box">
-        <div class="output-box-header">
-          <span class="output-box-label">COUPANG_SHORTS_KR.txt</span>
-          <button class="btn-copy" onclick="copyText('out-coupang', this)">복사</button>
+      <div class="out-card" id="card-kr">
+        <div class="out-card-head">
+          <div class="out-card-meta">
+            <span class="out-label">쿠팡 숏폼 KR</span>
+            <span class="out-track tag-a">TRACK A</span>
+          </div>
+          <button class="btn-copy" onclick="doCopy('out-coup-kr',this)">복사</button>
         </div>
-        <div class="output-text loading" id="out-coupang">
-          <div class="spinner"></div> 생성 대기 중
-        </div>
+        <div class="out-body loading" id="out-coup-kr"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="out-hint">→ CapCut / 제미나이에 붙여넣기</div>
       </div>
-      <div style="margin-top: 12px; font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace;">
-        → 복사 후 CapCut 또는 제미나이에 그대로 붙여넣기
-      </div>
-    </div>
 
-    <!-- ENGLISH TAB -->
-    <div class="tab-content" id="tab-english">
-      <div class="output-box">
-        <div class="output-box-header">
-          <span class="output-box-label">ENGLISH_SHORTS_EN.txt</span>
-          <button class="btn-copy" onclick="copyText('out-english', this)">복사</button>
+      <div class="out-card" id="card-en">
+        <div class="out-card-head">
+          <div class="out-card-meta">
+            <span class="out-label">쿠팡 숏폼 EN</span>
+            <span class="out-track tag-a">TRACK A</span>
+          </div>
+          <button class="btn-copy" onclick="doCopy('out-coup-en',this)">복사</button>
         </div>
-        <div class="output-text loading" id="out-english">
-          <div class="spinner"></div> 생성 대기 중
-        </div>
+        <div class="out-body loading" id="out-coup-en"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="out-hint">→ 글로벌 채널용 영문 버전</div>
       </div>
-      <div style="margin-top: 12px; font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace;">
-        → 동일 주제 EN 버전 · 글로벌 채널용
-      </div>
-    </div>
 
-    <!-- TISTORY TAB -->
-    <div class="tab-content" id="tab-tistory">
-      <div class="output-box">
-        <div class="output-box-header">
-          <span class="output-box-label">TISTORY_POST.html</span>
-          <button class="btn-copy" onclick="copyText('out-tistory', this)">복사</button>
+      <div class="out-card full" id="card-tistory">
+        <div class="out-card-head">
+          <div class="out-card-meta">
+            <span class="out-label">티스토리 게시글</span>
+            <span class="out-track tag-b">TRACK B</span>
+          </div>
+          <button class="btn-copy" onclick="doCopy('out-tistory',this)">복사</button>
         </div>
-        <div class="output-text loading" id="out-tistory">
-          <div class="spinner"></div> 생성 대기 중
+        <div class="out-body loading" id="out-tistory"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="out-hint">→ 복사 후 티스토리 편집기에 붙여넣기 · SEO 구조 포함</div>
+      </div>
+
+      <div class="out-card full" id="card-short-b">
+        <div class="out-card-head">
+          <div class="out-card-meta">
+            <span class="out-label">시사/에세이 숏폼 KR</span>
+            <span class="out-track tag-b">TRACK B</span>
+          </div>
+          <button class="btn-copy" onclick="doCopy('out-topic-short',this)">복사</button>
         </div>
+        <div class="out-body loading" id="out-topic-short"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="out-hint">→ 티스토리와 같은 주제의 숏폼 버전</div>
       </div>
-      <div style="margin-top: 12px; font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace;">
-        → 복사 후 티스토리 편집기에 붙여넣기 · SEO 태그 포함
-      </div>
+
     </div>
   </div>
 
 </div>
 
-<!-- SETTINGS MODAL -->
-<div class="modal-overlay" id="modal-settings">
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-title">설정</div>
-
     <div class="field">
       <label>CLAUDE API KEY</label>
       <input type="password" id="inp-api-key" placeholder="sk-ant-api03-...">
-      <div class="field-hint">로컬 저장됨 · 서버 전송 없음</div>
+      <div class="field-hint">로컬 저장 · 서버 전송 없음</div>
     </div>
-
-    <div class="field">
-      <label>쿠팡파트너스 링크 (선택)</label>
-      <input type="text" id="inp-coupang-link" placeholder="https://link.coupang.com/a/xxxxxxx">
-      <div class="field-hint">스크립트 하단에 자동 삽입됨</div>
-    </div>
-
-    <div class="field">
-      <label>콘텐츠 카테고리</label>
-      <select id="inp-category">
-        <option value="lifestyle">생활용품 / 건강 (쿠팡 추천)</option>
-        <option value="tech">IT · 전자기기</option>
-        <option value="beauty">뷰티 · 패션</option>
-        <option value="food">식품 · 주방</option>
-        <option value="home">홈리빙 · 인테리어</option>
-      </select>
-    </div>
-
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeSettings()">취소</button>
+      <button class="btn-sec" onclick="closeSettings()">취소</button>
       <button class="btn-primary" onclick="saveSettings()">저장</button>
     </div>
   </div>
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────────────
-let topics = [];
-let selectedTopic = null;
 let apiKey = '';
-let coupangLink = '';
-let category = 'lifestyle';
+let selectedTopic = '';
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
 (function init() {
   const d = new Date();
   const days = ['일','월','화','수','목','금','토'];
   document.getElementById('today-date').textContent =
-    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${days[d.getDay()]}요일`;
-
-  apiKey = localStorage.getItem('claude_api_key') || '';
-  coupangLink = localStorage.getItem('coupang_link') || '';
-  category = localStorage.getItem('content_category') || 'lifestyle';
-
-  if (!apiKey) {
-    document.getElementById('no-key-notice').style.display = 'block';
-  }
+    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${days[d.getDay()]}`;
+  apiKey = localStorage.getItem('ck_api') || '';
+  if (!apiKey) document.getElementById('no-key-notice').style.display = 'block';
+  fetchTopics();
 })();
 
-// ─── SETTINGS ─────────────────────────────────────────────────────────────
 function openSettings() {
   document.getElementById('inp-api-key').value = apiKey;
-  document.getElementById('inp-coupang-link').value = coupangLink;
-  document.getElementById('inp-category').value = category;
-  document.getElementById('modal-settings').classList.add('open');
+  document.getElementById('modal').classList.add('open');
 }
-function closeSettings() {
-  document.getElementById('modal-settings').classList.remove('open');
-}
+function closeSettings() { document.getElementById('modal').classList.remove('open'); }
 function saveSettings() {
   apiKey = document.getElementById('inp-api-key').value.trim();
-  coupangLink = document.getElementById('inp-coupang-link').value.trim();
-  category = document.getElementById('inp-category').value;
-  localStorage.setItem('claude_api_key', apiKey);
-  localStorage.setItem('coupang_link', coupangLink);
-  localStorage.setItem('content_category', category);
+  localStorage.setItem('ck_api', apiKey);
   document.getElementById('no-key-notice').style.display = apiKey ? 'none' : 'block';
   closeSettings();
+  if (apiKey) fetchTopics();
 }
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeSettings(); });
 
-// ─── TOPIC GENERATION ─────────────────────────────────────────────────────
-async function getTopics() {
-  if (!apiKey) { openSettings(); return; }
-
-  const btn = document.getElementById('btn-get-topics');
-  const icon = document.getElementById('topic-btn-icon');
-  const txt = document.getElementById('topic-btn-text');
+async function fetchTopics() {
+  const btn = document.getElementById('btn-refresh');
+  const icon = document.getElementById('refresh-icon');
   btn.disabled = true;
-  icon.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;display:inline-block"></div>';
-  txt.textContent = '추천 중...';
-  document.getElementById('topic-list').innerHTML = '';
-  document.getElementById('generate-row').style.display = 'none';
-  selectedTopic = null;
+  icon.innerHTML = '<div class="spinner" style="width:11px;height:11px;border-width:1.5px;display:inline-block;vertical-align:middle"></div>';
+  selectedTopic = '';
 
-  const catMap = {
-    lifestyle: '생활용품, 건강기능식품, 청소용품, 주방도구',
-    tech: 'IT기기, 스마트홈, 액세서리',
-    beauty: '스킨케어, 헤어케어, 뷰티 디바이스',
-    food: '간편식, 건강식품, 주방가전',
-    home: '홈인테리어, 수납, 침구, 조명'
-  };
-  const catLabel = catMap[category] || catMap.lifestyle;
+  const pills = document.getElementById('topic-pills');
+  pills.innerHTML = '<div class="pill-skeleton" style="width:110px"></div><div class="pill-skeleton" style="width:85px"></div><div class="pill-skeleton" style="width:130px"></div><div class="pill-skeleton" style="width:100px"></div>';
 
-  const today = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
+  const fallback = ['청년 결혼 기피의 진짜 이유','AI 시대 일자리는 사라지는가','갓생 열풍의 명과 암','한국 저출생 해법은 있는가','SNS가 우울감을 만드는 방식','지금 가장 위험한 경제 착각'];
 
-  const prompt = `오늘(${today}) 유튜브 쿠팡파트너스 숏폼 콘텐츠 주제 5개를 추천해줘.
-카테고리: ${catLabel}
+  if (!apiKey) { renderTopics(fallback); btn.disabled = false; icon.textContent = '↺'; return; }
 
-각 주제는 아래 JSON 배열 형식으로만 응답해. 설명 없이 JSON만.
-[
-  {
-    "title": "주제 제목 (15자 이내, 한국어)",
-    "desc": "이 주제가 왜 지금 좋은지 1~2줄 설명",
-    "hook": "영상 첫 3초 후킹 문장"
-  }
-]`;
-
+  const today = new Date().toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'long'});
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    const raw = data.content[0].text.trim();
-    const jsonStr = raw.replace(/```json|```/g, '').trim();
-    topics = JSON.parse(jsonStr);
-    renderTopics();
-  } catch(e) {
-    document.getElementById('topic-list').innerHTML =
-      `<div style="color:var(--red);font-size:13px;padding:16px 0">오류: ${e.message}. API 키를 확인해주세요.</div>`;
-  }
+    const res = await callClaude(`오늘(${today}) 블로그 & 숏폼 주제 6개를 추천해줘. 조건: 경제/사회/역사/심리/문화 중 하나, 지금 한국에서 관심 높은 것, 논쟁 또는 고찰 거리 있는 것, 10~40대 공감 가능. JSON 배열만 응답. ["주제1","주제2","주제3","주제4","주제5","주제6"]`, 400);
+    const clean = res.replace(/\`\`\`json|\`\`\`/g,'').trim();
+    renderTopics(JSON.parse(clean));
+  } catch(e) { renderTopics(fallback); }
 
   btn.disabled = false;
-  icon.textContent = '✦';
-  txt.textContent = '다시 추천받기';
+  icon.textContent = '↺';
 }
 
-function renderTopics() {
-  const catTagMap = {
-    lifestyle: 'tag-coup', tech: 'tag-coup', beauty: 'tag-coup',
-    food: 'tag-coup', home: 'tag-coup'
-  };
-  const list = document.getElementById('topic-list');
-  list.innerHTML = topics.map((t, i) => `
-    <div class="topic-card" id="topic-${i}" onclick="selectTopic(${i})">
-      <div class="topic-num">0${i+1}</div>
-      <div class="topic-content">
-        <div class="topic-title">${t.title}</div>
-        <div class="topic-desc">${t.desc}</div>
-        <div class="topic-tags">
-          <span class="tag tag-coup">쿠팡 숏폼</span>
-          <span class="tag tag-en">EN 버전</span>
-          <span class="tag tag-kr">티스토리</span>
-        </div>
-        <div style="margin-top:8px;font-size:12px;color:var(--text3)">
-          후킹: <span style="color:var(--yellow)">"${t.hook}"</span>
-        </div>
-      </div>
-      <div class="topic-arrow">→</div>
-    </div>
-  `).join('');
+function renderTopics(arr) {
+  document.getElementById('topic-pills').innerHTML = arr.map(t =>
+    `<div class="topic-pill" onclick="pickTopic(this,'${t.replace(/'/g,"&#39;")}')">${t}</div>`
+  ).join('');
 }
 
-function selectTopic(i) {
-  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('topic-' + i).classList.add('selected');
-  selectedTopic = topics[i];
-  document.getElementById('generate-row').style.display = 'flex';
-
-  // Update steps
-  document.getElementById('step1-indicator').classList.remove('active');
-  document.getElementById('step1-indicator').classList.add('done');
-  document.getElementById('step2-indicator').classList.add('active');
+function pickTopic(el, t) {
+  document.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTopic = t;
+  document.getElementById('inp-custom-topic').value = '';
 }
 
-// ─── CONTENT GENERATION ───────────────────────────────────────────────────
-async function generateAll() {
-  if (!selectedTopic) return;
-
-  // Show output section
-  document.getElementById('section-output').classList.add('visible');
-  document.getElementById('output-topic-title').textContent = selectedTopic.title;
-  document.getElementById('status-bar').classList.add('visible');
-
-  // Update steps
-  document.getElementById('step2-indicator').classList.remove('active');
-  document.getElementById('step2-indicator').classList.add('done');
-  document.getElementById('step3-indicator').classList.add('active');
-
-  // Reset output areas
-  ['coupang','english','tistory'].forEach(id => {
-    const el = document.getElementById('out-' + id);
-    el.className = 'output-text loading';
-    el.innerHTML = '<div class="spinner"></div> 생성 중...';
-  });
-
-  // Switch to first tab
-  switchTab('coupang');
-
-  // Scroll to output
-  setTimeout(() => {
-    document.getElementById('section-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
-
-  const linkLine = coupangLink
-    ? `\n\n─────────────────\n쿠팡 상품 바로가기 👉 ${coupangLink}`
-    : '\n\n─────────────────\n[쿠팡 링크 여기 삽입]';
-
-  // Generate all 3 in parallel
-  await Promise.all([
-    generateCoupang(linkLine),
-    generateEnglish(),
-    generateTistory()
-  ]);
-
-  document.getElementById('status-bar').classList.remove('visible');
-}
-
-async function callClaude(prompt) {
+async function callClaude(prompt, maxTokens=1500) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -681,177 +363,162 @@ async function callClaude(prompt) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
+      max_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }]
     })
   });
   const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
   return data.content[0].text.trim();
 }
 
-async function generateCoupang(linkLine) {
-  const el = document.getElementById('out-coupang');
-  try {
-    const prompt = `유튜브 쿠팡파트너스 숏폼 스크립트를 작성해줘.
+async function generateAll() {
+  if (!apiKey) { openSettings(); return; }
 
-주제: ${selectedTopic.title}
-첫 후킹: ${selectedTopic.hook}
+  const productUrl = document.getElementById('inp-product-url').value.trim();
+  const partnersLink = document.getElementById('inp-partners-link').value.trim();
+  const productMemo = document.getElementById('inp-product-memo').value.trim();
+  const customTopic = document.getElementById('inp-custom-topic').value.trim();
+  const topic = customTopic || selectedTopic;
 
-형식:
-[후킹 - 3초]
-(시선 끄는 첫 문장)
+  const hasA = !!productUrl;
+  const hasB = !!topic;
 
-[문제 제기 - 10초]
-(공감 유발 문제 상황)
-
-[해결책 소개 - 20초]
-(상품/방법 소개, 구체적 장점 2~3가지)
-
-[CTA - 5초]
-(클릭 유도 + 링크 안내)
-
-- 구어체, 친근한 말투
-- 총 60초 이내 분량 (약 180~220자)
-- 자막에 쓸 수 있게 간결하게
-- 스크립트만 출력, 설명 없이`;
-    const result = await callClaude(prompt);
-    el.className = 'output-text';
-    el.textContent = result + linkLine;
-  } catch(e) {
-    el.className = 'output-text';
-    el.textContent = '❌ 생성 실패: ' + e.message;
+  if (!hasA && !hasB) {
+    alert('Track A: 쿠팡 상품 링크를 입력하거나\nTrack B: 주제를 선택 또는 입력해 주세요.');
+    return;
   }
+
+  const outSec = document.getElementById('output-section');
+  outSec.classList.add('visible');
+  document.getElementById('status-row').classList.add('on');
+
+  ['out-coup-kr','out-coup-en','out-tistory','out-topic-short'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'out-body loading';
+    el.innerHTML = '<div class="spinner"></div>&nbsp;생성 중...';
+  });
+
+  document.getElementById('card-kr').style.display = hasA ? '' : 'none';
+  document.getElementById('card-en').style.display = hasA ? '' : 'none';
+  document.getElementById('card-tistory').style.display = hasB ? '' : 'none';
+  document.getElementById('card-short-b').style.display = hasB ? '' : 'none';
+
+  outSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const jobs = [];
+  if (hasA) { jobs.push(genKR(productUrl, partnersLink, productMemo)); jobs.push(genEN(productUrl, partnersLink, productMemo)); }
+  if (hasB) { jobs.push(genTistory(topic)); jobs.push(genShortB(topic)); }
+
+  await Promise.all(jobs);
+  document.getElementById('status-row').classList.remove('on');
 }
 
-async function generateEnglish() {
-  const el = document.getElementById('out-english');
+async function genKR(url, pLink, memo) {
+  const el = document.getElementById('out-coup-kr');
+  const link = pLink ? `\n\n─────────────\n구매 링크 👉 ${pLink}` : '\n\n─────────────\n[쿠팡파트너스 링크 삽입]';
   try {
-    const prompt = `Write a YouTube Shorts script in English for a product recommendation video.
+    const r = await callClaude(`다음 쿠팡 상품 링크의 상품을 파악하고 그 상품에 꼭 맞는 유튜브 숏폼 스크립트를 한국어로 써줘.
 
-Topic: ${selectedTopic.title} (adapt naturally to English context)
-Hook: ${selectedTopic.hook} (translate and localize)
+상품 링크: ${url}${memo ? '\n추가 메모: '+memo : ''}
 
-Format:
-[HOOK - 3sec]
-(Attention-grabbing opening line)
-
-[PROBLEM - 10sec]
-(Relatable problem setup)
-
-[SOLUTION - 20sec]
-(Product/tip introduction, 2-3 specific benefits)
-
-[CTA - 5sec]
-(Click encouragement)
-
-- Conversational, energetic tone
-- Max 60 seconds (180-220 words)
-- Subtitle-ready short sentences
-- Script only, no explanation`;
-    const result = await callClaude(prompt);
-    el.className = 'output-text';
-    el.textContent = result;
-  } catch(e) {
-    el.className = 'output-text';
-    el.textContent = '❌ Generation failed: ' + e.message;
-  }
+조건:
+- 이 상품의 실제 특징·장점을 구체적으로 언급 (막연한 "좋아요" 금지)
+- 구어체, 친근하고 에너지 있는 말투
+- 구조: 후킹(3초) → 공감/문제(10초) → 상품 소개·장점 2~3가지(20초) → CTA(5초)
+- 총 60초 이내, 약 200자
+- 자막용으로 짧고 끊어치게
+- 스크립트만. 제목·설명 없이.`);
+    el.className = 'out-body'; el.textContent = r + link;
+  } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
 
-async function generateTistory() {
+async function genEN(url, pLink, memo) {
+  const el = document.getElementById('out-coup-en');
+  const link = pLink ? `\n\n─────────────\nShop here 👉 ${pLink}` : '\n\n─────────────\n[Coupang link here]';
+  try {
+    const r = await callClaude(`Look at this Coupang product URL and write an English YouTube Shorts script tailored to the actual product.
+
+Product URL: ${url}${memo ? '\nNotes: '+memo : ''}
+
+Requirements:
+- Mention specific real features/benefits of THIS product (no generic "great product")
+- Conversational, upbeat, energetic tone
+- Structure: Hook(3s) → Relatable problem(10s) → Product + 2-3 benefits(20s) → CTA(5s)
+- Under 60 seconds (~180 words)
+- Short punchy sentences for subtitles
+- Script only. No title or explanation.`);
+    el.className = 'out-body'; el.textContent = r + link;
+  } catch(e) { el.className = 'out-body'; el.textContent = '❌ Failed: '+e.message; }
+}
+
+async function genTistory(topic) {
   const el = document.getElementById('out-tistory');
   try {
-    const prompt = `아래 글쓴이의 문체와 스타일을 분석해서, 같은 톤으로 티스토리 블로그 게시글을 써줘.
+    const r = await callClaude(`아래 문체 특징을 정확히 반영해서 티스토리 SEO 게시글을 써줘.
 
----
-[글쓴이 문체 샘플]
+[글쓴이 문체 — 이 톤을 정확히 따를 것]
 "분명하게 말하지만, 이 글은 나태하게 살라는 말을 하려는 것은 아니다."
-"맞는 말인데, 조금 더 좋은 조건에서 조금 더 오래 일하고 싶은 취준생들을 저 말한마디로 폄하하기엔 문제가 있다고 생각한다."
-"어쨌든, 포토샵이 버벅거릴 때 해결 방법을 공유한다."
-"오, 다시 멀쩡해졌다! 내 파빌리온은 여전히 현역으로 남아 있을 수 있게 됐다."
 "엔진 오일은 다 말라붙었는데 겉면만 반짝거리게 닦아놓은 중고차와 다를 바 없다."
+"맞는 말인데, 저 말 한마디로 폄하하기엔 문제가 있다."
 "인생은 엑셀 시트가 아니다."
+"어쨌든, 포토샵이 버벅거릴 때 해결 방법을 공유한다. 본인은 CS6 버전을 이용 중이다."
+"허허허. 허허허허."
 "끝이다."
----
 
-[문체 특징 — 반드시 지켜야 함]
-- 말을 걸듯 쓰는 1인칭 구어체. "저는~" 같은 공손체 금지. "나는~", "솔직히~", "써보니까~" 처럼 편하게.
-- 짧고 끊어치는 문장과 긴 문장을 자연스럽게 섞음
-- 추상적인 개념을 일상 사물이나 상황에 빗대는 비유를 즐겨 씀
-- 주장이 있고 직설적. 두루뭉술하게 쓰지 않음.
-- 결론에서 힘을 살짝 뺌. 거창하게 마무리 짓지 않음.
-- 정보성 글도 사람 냄새 나게. 필요하면 본인 경험 슬쩍 끼워넣기.
-- 절대 "~해드립니다", "~하시면 됩니다" 같은 서비스업 말투 금지
+[문체 규칙 — 어기면 안 됨]
+1. 1인칭 구어체. "저는" 금지. "나는", "솔직히", "그러니까", "어쨌든" 같은 편한 말.
+2. 짧게 끊는 문장과 긴 문장을 자연스럽게 섞기.
+3. 추상 개념은 일상 사물에 빗댄 비유로 설명.
+4. 주장이 뚜렷하고 직설적. 두루뭉술 절대 금지.
+5. 결론에서 힘 살짝 빼기. 거창한 마무리 금지.
+6. "~해드립니다", "~하시면 됩니다" 같은 서비스 말투 절대 금지.
 
-[SEO 구조 — 구글 검색 최적화]
-- 제목: 검색 의도가 명확한 키워드 포함 (예: "~하는 방법", "~인 이유", "~후기")
-- 도입부 첫 100자 안에 핵심 키워드 자연스럽게 1회
-- H2 소제목 3~4개 (## 형식으로 표시)
-- 본문에 핵심 키워드 및 연관 키워드 총 4~6회 자연스럽게 분산
-- 분량: 900~1300자 (너무 짧으면 구글이 안 좋아함)
-- 마지막 단락 전에 [쿠팡링크] 삽입 위치 표시
-- 맨 끝에 태그 10개 (#태그 형식)
+[SEO 구조]
+- 첫 줄: 블로그 제목 (검색 키워드 포함)
+- 도입부 100자 안에 핵심 키워드 1회 자연 포함
+- ## H2 소제목 3~4개
+- 핵심·연관 키워드 본문 전체 4~6회 자연 분산
+- 분량 950~1300자
+- 마지막 줄: 태그 10개 (#태그)
 
-[오늘의 주제]
-${selectedTopic.title}
-배경: ${selectedTopic.desc}
+주제: ${topic}
 
-게시글 제목 한 줄 먼저, 그 다음 본문. 설명 없이 바로 출력.`;
-    const result = await callClaude(prompt);
-    el.className = 'output-text';
-    // Replace coupang placeholder if link exists
-    const finalText = coupangLink
-      ? result.replace(/\[쿠팡링크\]/g, coupangLink)
-      : result;
-    el.textContent = finalText;
-  } catch(e) {
-    el.className = 'output-text';
-    el.textContent = '❌ 생성 실패: ' + e.message;
-  }
+제목 → 본문 순서로 바로 출력. 메타설명 없이.`, 2000);
+    el.className = 'out-body'; el.textContent = r;
+  } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
 
-// ─── TABS ─────────────────────────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    const tabs = ['coupang','english','tistory'];
-    b.classList.toggle('active', tabs[i] === name);
-  });
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+async function genShortB(topic) {
+  const el = document.getElementById('out-topic-short');
+  try {
+    const r = await callClaude(`아래 주제로 시사/에세이 채널 스타일의 유튜브 숏폼 스크립트를 써줘.
+
+주제: ${topic}
+
+조건:
+- 후킹: 반박하기 어려운 질문이나 반전 사실로 시작
+- 구조: 후킹(5초) → 현상/문제 제시(15초) → 나의 시각·분석(25초) → 한 줄 결론(5초)
+- 말투: 직설적이고 에너지 있게. 설교 금지.
+- 60초 이내, 약 200자
+- 짧고 끊어치는 자막용 문장
+- 스크립트만. 제목·설명 없이.`);
+    el.className = 'out-body'; el.textContent = r;
+  } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
 
-// ─── COPY ─────────────────────────────────────────────────────────────────
-function copyText(id, btn) {
-  const el = document.getElementById(id);
-  const text = el.textContent;
-  navigator.clipboard.writeText(text).then(() => {
+function doCopy(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
     const orig = btn.textContent;
-    btn.textContent = '✓ 복사됨';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.classList.remove('copied');
-    }, 2000);
+    btn.textContent = '✓ 복사됨'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('ok'); }, 2000);
   });
 }
 
-// ─── RESET ────────────────────────────────────────────────────────────────
-function resetAll() {
-  selectedTopic = null;
-  document.getElementById('section-output').classList.remove('visible');
-  document.getElementById('generate-row').style.display = 'none';
-  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-  ['step1','step2','step3'].forEach(s => {
-    const el = document.getElementById(s + '-indicator');
-    el.classList.remove('active','done');
-  });
-  document.getElementById('step1-indicator').classList.add('active');
+function resetOutput() {
+  document.getElementById('output-section').classList.remove('visible');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-// Close modal on overlay click
-document.getElementById('modal-settings').addEventListener('click', function(e) {
-  if (e.target === this) closeSettings();
-});
 </script>
 </body>
 </html>
