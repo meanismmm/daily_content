@@ -740,6 +740,7 @@ ${link}`, 2000);
 }
 
 
+function doCopy(id, btn) {
   navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
     const orig = btn.textContent;
     btn.textContent = '✓ 복사됨'; btn.classList.add('ok');
