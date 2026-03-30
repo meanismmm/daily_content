@@ -106,6 +106,29 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 .out-body.loading { display: flex; align-items: center; justify-content: center; color: var(--text3); font-family: 'DM Mono', monospace; font-size: 12px; gap: 8px; }
 .out-hint { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; padding: 0 16px 12px; }
 
+.rewrite-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+.rw-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--rs); color: var(--text); font-size: 12px;
+  font-family: 'Noto Sans KR', sans-serif; padding: 7px 11px; outline: none;
+  transition: border-color .15s;
+}
+.rw-input:focus { border-color: var(--accent); }
+.rw-input::placeholder { color: var(--text3); }
+.btn-rw {
+  background: none; border: 1px solid var(--border2); color: var(--text3);
+  font-size: 12px; font-family: 'DM Mono', monospace;
+  padding: 7px 13px; border-radius: var(--rs); cursor: pointer;
+  transition: all .15s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-rw:hover { border-color: var(--accent); color: var(--accent); }
+.btn-rw:disabled { opacity: .4; cursor: not-allowed; }
+
 .spinner { width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -226,6 +249,10 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
           <button class="btn-copy" onclick="doCopy('out-coup-kr',this)">복사</button>
         </div>
         <div class="out-body loading" id="out-coup-kr"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="rewrite-bar" id="rw-kr">
+          <input class="rw-input" id="rw-inp-kr" placeholder="키워드 추가 (선택) · 예: 반려동물, 냄새 제거, 가성비">
+          <button class="btn-rw" onclick="rewrite('kr')">↺ 다시쓰기</button>
+        </div>
         <div class="out-hint">→ CapCut / 제미나이에 붙여넣기</div>
       </div>
 
@@ -238,6 +265,10 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
           <button class="btn-copy" onclick="doCopy('out-coup-en',this)">복사</button>
         </div>
         <div class="out-body loading" id="out-coup-en"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="rewrite-bar" id="rw-en">
+          <input class="rw-input" id="rw-inp-en" placeholder="Keywords to add (optional) · e.g. pet odor, budget, quick clean">
+          <button class="btn-rw" onclick="rewrite('en')">↺ Rewrite</button>
+        </div>
         <div class="out-hint">→ 글로벌 채널용 영문 버전</div>
       </div>
 
@@ -250,6 +281,10 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
           <button class="btn-copy" onclick="doCopy('out-tistory',this)">복사</button>
         </div>
         <div class="out-body loading" id="out-tistory"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="rewrite-bar" id="rw-tistory">
+          <input class="rw-input" id="rw-inp-tistory" placeholder="키워드 추가 (선택) · 예: 2030 세대, 통계, 비유 더 넣어줘">
+          <button class="btn-rw" onclick="rewrite('tistory')">↺ 다시쓰기</button>
+        </div>
         <div class="out-hint">→ 복사 후 티스토리 편집기에 붙여넣기 · SEO 구조 포함</div>
       </div>
 
@@ -262,6 +297,10 @@ hr.div { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
           <button class="btn-copy" onclick="doCopy('out-topic-short',this)">복사</button>
         </div>
         <div class="out-body loading" id="out-topic-short"><div class="spinner"></div>&nbsp;대기 중</div>
+        <div class="rewrite-bar" id="rw-short-b">
+          <input class="rw-input" id="rw-inp-short-b" placeholder="키워드 추가 (선택) · 예: 더 충격적인 통계, 후킹 강하게">
+          <button class="btn-rw" onclick="rewrite('short-b')">↺ 다시쓰기</button>
+        </div>
         <div class="out-hint">→ 티스토리와 같은 주제의 숏폼 버전</div>
       </div>
 
@@ -569,7 +608,133 @@ async function genShortB(topic) {
   } catch(e) { el.className = 'out-body'; el.textContent = '❌ 실패: '+e.message; }
 }
 
-function doCopy(id, btn) {
+async function rewrite(type) {
+  const kwMap = { kr: 'rw-inp-kr', en: 'rw-inp-en', tistory: 'rw-inp-tistory', 'short-b': 'rw-inp-short-b' };
+  const outMap = { kr: 'out-coup-kr', en: 'out-coup-en', tistory: 'out-tistory', 'short-b': 'out-topic-short' };
+  const btnMap = { kr: 'rw-kr', en: 'rw-en', tistory: 'rw-tistory', 'short-b': 'rw-short-b' };
+
+  const kw = document.getElementById(kwMap[type]).value.trim();
+  const el = document.getElementById(outMap[type]);
+  const bar = document.getElementById(btnMap[type]);
+  const btn = bar.querySelector('.btn-rw');
+
+  // Get current content for context
+  const prev = el.textContent.trim();
+
+  el.className = 'out-body loading';
+  el.innerHTML = '<div class="spinner"></div>&nbsp;다시 쓰는 중...';
+  btn.disabled = true;
+
+  const productUrl = document.getElementById('inp-product-url').value.trim();
+  const partnersLink = document.getElementById('inp-partners-link').value.trim();
+  const productMemo = document.getElementById('inp-product-memo').value.trim();
+  const customTopic = document.getElementById('inp-custom-topic').value.trim();
+  const topic = customTopic || selectedTopic;
+  const kwLine = kw ? `\n\n추가 키워드/요청: ${kw}` : '';
+  const kwLineEN = kw ? `\n\nAdditional keywords/requests: ${kw}` : '';
+
+  try {
+    if (type === 'kr') {
+      const link = partnersLink ? `구매 링크 👉 ${partnersLink}` : '[쿠팡파트너스 링크 삽입]';
+      const r = await callClaude(`다음 쿠팡 상품 링크의 상품을 분석하고, CapCut AI 영상 제작용 장면 단위 숏폼 스크립트를 한국어로 써줘.
+
+상품 링크: ${productUrl}${productMemo ? '\n추가 메모: '+productMemo : ''}${kwLine}
+
+이전에 생성한 결과가 상품 정보를 제대로 반영하지 못했을 수 있으니, 상품 링크에서 실제 상품명·특징·가격대를 최대한 파악해서 반영해줘.
+
+[출력 형식]
+총 7~9개 장면. 각 장면:
+━━━━━━━━━━━━━━━━━━━━
+[장면 N] 0~Xs | 역할: (후킹/문제/소개/장점/CTA 중 하나)
+나레이션: "실제 말할 대사. 구어체."
+화면: (CapCut/Pexels 영어 검색어. 구체적 상황.)
+자막: "핵심 텍스트. 2~5단어."
+효과: (줌인/줌아웃/컷/슬로우모션/텍스트팝업)
+━━━━━━━━━━━━━━━━━━━━
+
+마지막에:
+─────────────────────
+📌 설명란 문구:
+[상품명 + 한줄 소개]
+${link}
+#쿠팡파트너스 #추천템`, 2000);
+      el.className = 'out-body'; el.textContent = r;
+
+    } else if (type === 'en') {
+      const link = partnersLink ? `Shop here 👉 ${partnersLink}` : '[Coupang affiliate link here]';
+      const r = await callClaude(`Analyze this Coupang product and rewrite an English scene-by-scene YouTube Shorts production script for CapCut.
+
+Product URL: ${productUrl}${productMemo ? '\nNotes: '+productMemo : ''}${kwLineEN}
+
+The previous version may have lacked product-specific details. Extract the actual product name, features, and use case from the URL and reflect them precisely.
+
+[Format]
+7~9 scenes:
+━━━━━━━━━━━━━━━━━━━━
+[Scene N] 0~Xs | Role: (hook/problem/intro/benefit/CTA)
+Narration: "Spoken line. Conversational."
+Visual: (CapCut/Pexels English search query. Specific.)
+Caption: "On-screen text. 2~5 words."
+Effect: (zoom-in/zoom-out/cut/slow-motion/text-pop)
+━━━━━━━━━━━━━━━━━━━━
+
+End with:
+─────────────────────
+📌 Description copy:
+[Product name + pitch]
+${link}`, 2000);
+      el.className = 'out-body'; el.textContent = r;
+
+    } else if (type === 'tistory') {
+      const r = await callClaude(`아래 문체로 티스토리 SEO 게시글을 다시 써줘.${kwLine}
+
+[문체 규칙]
+1. 1인칭 구어체. "저는" 금지. "나는", "솔직히", "그러니까" 같은 편한 말.
+2. 짧게 끊는 문장과 긴 문장 섞기.
+3. 추상 개념은 일상 사물 비유로.
+4. 주장이 뚜렷하고 직설적.
+5. 결론에서 힘 살짝 빼기.
+6. 서비스 말투("~해드립니다") 절대 금지.
+
+[SEO]
+- 첫 줄: 블로그 제목 (키워드 포함)
+- ## H2 소제목 3~4개
+- 핵심 키워드 4~6회 자연 분산
+- 분량 950~1300자
+- 끝에 태그 10개
+
+주제: ${topic}
+
+제목 → 본문 순서로 바로 출력.`, 2000);
+      el.className = 'out-body'; el.textContent = r;
+
+    } else if (type === 'short-b') {
+      const r = await callClaude(`아래 주제로 시사/에세이 채널 스타일 CapCut 장면 단위 숏폼 스크립트를 다시 써줘.${kwLine}
+
+주제: ${topic}
+
+[출력 형식]
+총 7~8장면:
+━━━━━━━━━━━━━━━━━━━━
+[장면 N] 0~Xs | 역할: (후킹/현상/분석/반전/결론)
+나레이션: "직설적. 짧고 강하게."
+화면: (CapCut/Pexels 영어 검색어. 구체적.)
+자막: "핵심 텍스트. 2~6단어."
+효과: (줌인/줌아웃/컷/슬로우모션/텍스트팝업)
+━━━━━━━━━━━━━━━━━━━━
+
+- 나레이션 구어체. 설교 금지.
+- 통계/수치 있으면 자막에 크게.`, 2000);
+      el.className = 'out-body'; el.textContent = r;
+    }
+  } catch(e) {
+    el.className = 'out-body';
+    el.textContent = '❌ 실패: ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+
   navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
     const orig = btn.textContent;
     btn.textContent = '✓ 복사됨'; btn.classList.add('ok');
